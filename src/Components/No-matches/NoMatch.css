@@ -1,0 +1,14 @@
+.img{
+    width: 100dvw;
+    height: auto;
+    display: flex;
+    justify-content: center;
+    margin: 32px 0px ;
+}
+
+.img img{
+    width: 50dvw;
+    height: auto;
+    object-fit: cover;
+
+}
