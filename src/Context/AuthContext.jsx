@@ -1,6 +1,5 @@
-// src/Context/AuthContext.js
-
 import React, { createContext, useState, useEffect } from 'react';
+import axios from 'axios';
 
 export const AuthContext = createContext();
 
@@ -12,18 +11,15 @@ export const AuthProvider = ({ children }) => {
     if (storedUser) {
       setUser(storedUser);
     }
-  }, [user]);
+  }, []);
 
   const login = async (email, password) => {
     try {
-      const response = await fetch('http://localhost:8080/api/auth/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email, password }),
+      const response = await axios.post('http://localhost:8080/api/auth/login', {
+        email,
+        password,
       });
-      const data = await response.json();
+      const data = response.data;
       if (data) {
         setUser(data);
         localStorage.setItem('user', JSON.stringify(data));
@@ -35,14 +31,12 @@ export const AuthProvider = ({ children }) => {
 
   const register = async (name, email, password) => {
     try {
-      const response = await fetch('http://localhost:8080/api/auth/register', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ name, email, password }),
+      const response = await axios.post('http://localhost:8080/api/auth/register', {
+        name,
+        email,
+        password,
       });
-      const data = await response.json();
+      const data = response.data;
       if (data) {
         setUser(data);
         localStorage.setItem('user', JSON.stringify(data));

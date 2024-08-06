@@ -16,7 +16,11 @@ public class UserService {
 
     public User registerUser(User user) {
         // Store plain password for simplicity; in production, always use hashed passwords
-        return userRepository.save(user);
+        if(userRepository.findByEmail(user.getEmail()) == null) {
+            return userRepository.save(user);
+        }
+        return null;
+
     }
 
     public ResponseEntity<User> loginUser(User user) {

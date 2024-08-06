@@ -4,10 +4,9 @@ import { ShopContext } from '../Context/ShopContext';
 import Item from '../Components/Item/Item';
 import Search from '../Components/Search/Search';
 import noProductsImg from '../Components/Assets/no_matches.png';
-import { useNavigate } from 'react-router-dom';
+import noMatch from '../Components/Assets/no_matches.png';
 
 const ShopCategory = (props) => {
-  const navigate = useNavigate();
   const { all_product } = useContext(ShopContext);
   const [searchVal, setSearchVal] = useState("");
   const [visibleProducts, setVisibleProducts] = useState(10); // Initial number of products to display
@@ -21,7 +20,9 @@ const ShopCategory = (props) => {
     });
 
     if (filteredProducts.length === 0) {
-      navigate('/no-items');
+      <div className='img'>
+      <img src={noMatch} alt="No matches found" />
+    </div>
     }
 
     return filteredProducts;

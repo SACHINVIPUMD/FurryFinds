@@ -1,20 +1,37 @@
-.contact-page {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 40px 20px;
+.contact-us {
+    padding: 50px;
+    background-color: #f9f9f9;
   }
   
-  .contact-page h1 {
-    margin-bottom: 20px;
-    font-size: 32px;
+  .contact-us-header {
+    text-align: center;
+    margin-bottom: 40px;
   }
   
-  .contact-form {
+  .contact-us-header h1 {
+    font-size: 48px;
+    font-weight: 700;
+    color: #333;
+  }
+  
+  .contact-us-header p {
+    font-size: 18px;
+    color: #777;
+  }
+  
+  .contact-us-form-container {
     display: flex;
-    flex-direction: column;
+    justify-content: center;
+    margin-bottom: 40px;
+  }
+  
+  .contact-us-form {
     width: 100%;
     max-width: 600px;
+    background: #fff;
+    padding: 40px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
   }
   
   .form-group {
@@ -23,8 +40,9 @@
   
   .form-group label {
     display: block;
-    margin-bottom: 5px;
     font-size: 16px;
+    margin-bottom: 8px;
+    color: #555;
   }
   
   .form-group input,
@@ -32,27 +50,40 @@
     width: 100%;
     padding: 10px;
     font-size: 16px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
   }
   
-  .form-group textarea {
-    height: 150px;
-    resize: vertical;
-  }
-  
-  button[type="submit"] {
-    padding: 10px 20px;
-    font-size: 18px;
-    color: white;
-    background-color: #ff4141;
+  .contact-us-button {
+    display: inline-block;
+    background: #ff4141;
+    color: #fff;
+    padding: 12px 20px;
+    font-size: 16px;
     border: none;
-    border-radius: 4px;
+    border-radius: 5px;
     cursor: pointer;
-    transition: background-color 0.3s;
   }
   
-  button[type="submit"]:hover {
-    background-color: #ff6161;
+  .contact-us-button:hover {
+    background: #e63939;
+  }
+  
+  .contact-us-details {
+    text-align: center;
+  }
+  
+  .contact-us-info h2 {
+    font-size: 32px;
+    font-weight: 600;
+    color: #444;
+    margin-bottom: 20px;
+  }
+  
+  .contact-us-info p {
+    font-size: 16px;
+    color: #555;
+    line-height: 1.6;
+    margin-bottom: 10px;
   }
   

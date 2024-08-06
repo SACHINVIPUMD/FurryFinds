@@ -18,6 +18,12 @@ public class User {
     @Column(nullable = false)
     private String password;
 
+    @Column(nullable = true)
+    private String address;
+
+    @Column(nullable = true)
+    private String phno;
+
     // Getters and Setters
     public Long getId() {
         return id;
@@ -50,4 +56,22 @@ public class User {
     public void setPassword(String password) {
         this.password = password;
     }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getPhno() {
+        return phno;
+    }
+
+    public void setPhno(String phno) {
+        this.phno = phno;
+    }
+
+
 }

@@ -11,10 +11,9 @@ import women_banner from './Components/Assets/banner_foods.png'
 import kid_banner from './Components/Assets/banner_products.png'
 import Login from './Pages/Login';
 import Signup from './Pages/Signup';
-import NoMatch from './Components/No-matches/NoMatch';
 import PaymentPage from './Components/Payment/PaymentPage';
-import About from './Components/About/About';
 import Contact from './Components/Contact/Contact';
+import AboutUs from './Components/About/AboutUs';
 function App() {
   return (
     <div>
@@ -31,9 +30,8 @@ function App() {
         <Route path='/cart' element={<Cart/>}/>
         <Route path='/signup' element={<Signup/>}/>
         <Route path='/login' element={<Login/>}/>
-        <Route path='/no-items' element={<NoMatch/>}/>
         <Route path='/payment' element={<PaymentPage />}/>
-        <Route path='/about' element={<About />}/>
+        <Route path='/about' element={<AboutUs />}/>
         <Route path='/contact' element={<Contact />}/>
       </Routes>
       <Footer/>
