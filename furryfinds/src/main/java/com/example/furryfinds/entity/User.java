@@ -73,5 +73,4 @@ public class User {
         this.phno = phno;
     }
 
-
 }

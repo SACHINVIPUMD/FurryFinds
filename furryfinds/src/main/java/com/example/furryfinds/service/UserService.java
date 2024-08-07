@@ -14,13 +14,12 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
-    public User registerUser(User user) {
-        // Store plain password for simplicity; in production, always use hashed passwords
-        if(userRepository.findByEmail(user.getEmail()) == null) {
-            return userRepository.save(user);
+    public ResponseEntity<User> registerUser(User user) {
+        if(userRepository.findByEmail(user.getEmail()).isEmpty()) {
+            userRepository.save(user);
+            return new ResponseEntity<>(user, HttpStatus.OK);
         }
-        return null;
-
+        return new ResponseEntity<>(HttpStatus.IM_USED);
     }
 
     public ResponseEntity<User> loginUser(User user) {
@@ -31,3 +30,4 @@ public class UserService {
         return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
     }
 }
+

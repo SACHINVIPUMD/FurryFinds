@@ -1,4 +1,4 @@
-import React, { useState, useRef, useContext } from 'react';
+import React, { useState, useRef, useContext, useEffect } from 'react';
 import './Navbar.css';
 import logo from '../Assets/logo (3).png';
 import cart_icon from '../Assets/cart_icon.png';
@@ -12,6 +12,11 @@ const Navbar = () => {
   const { getTotalCartItems } = useContext(ShopContext);
   const { user, logout } = useContext(AuthContext);
   const menuRef = useRef();
+
+  useEffect(() => {
+    // This effect will run when 'user' changes
+    console.log('User state changed:', user);
+  }, [user]);
 
   const dropdown_toggle = (e) => {
     menuRef.current.classList.toggle("nav-menu-visible");

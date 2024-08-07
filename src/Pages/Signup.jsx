@@ -7,7 +7,7 @@ const Signup = () => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const { register } = useContext(AuthContext); // Assuming you have a register function in AuthContext
+  const { register } = useContext(AuthContext);
   const navigate = useNavigate();
 
   const handleSignup = async () => {
@@ -34,7 +34,7 @@ const Signup = () => {
           />
           <input
             type='password'
-            placeholder='password'
+            placeholder='Password'
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
@@ -50,6 +50,6 @@ const Signup = () => {
       </div>
     </div>
   );
-}
+};
 
 export default Signup;
