@@ -5,6 +5,7 @@ import Item from '../Components/Item/Item';
 import Search from '../Components/Search/Search';
 import noProductsImg from '../Components/Assets/no_matches.png';
 import noMatch from '../Components/Assets/no_matches.png';
+import Footer from '../Components/Footer/Footer';
 
 const ShopCategory = (props) => {
   const { all_product } = useContext(ShopContext);
@@ -67,6 +68,7 @@ const ShopCategory = (props) => {
           </button>
         </div>
       )}
+      <Footer />
     </div>
   );
 }

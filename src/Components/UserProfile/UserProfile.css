@@ -1,0 +1,28 @@
+.user-profile {
+    padding: 100px;
+    max-width: 600px;
+    margin: 0 auto;
+    background-color: #fff;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+  }
+  
+  .user-profile h2 {
+    text-align: center;
+    color: #333;
+  }
+  
+  .profile-details {
+    margin-top: 20px;
+  }
+  
+  .profile-details p {
+    font-size: 18px;
+    margin: 10px 0;
+    color: #555;
+  }
+  
+  .profile-details p strong {
+    color: #333;
+  }
+  

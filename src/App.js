@@ -5,7 +5,6 @@ import ShopCategory from './Pages/ShopCategory';
 import Product from './Pages/Product';
 import Shop from './Pages/Shop';
 import Cart from './Pages/Cart';
-import Footer from './Components/Footer/Footer';
 import men_banner from './Components/Assets/banner_pets.png'
 import women_banner from './Components/Assets/banner_foods.png'
 import kid_banner from './Components/Assets/banner_products.png'
@@ -14,6 +13,7 @@ import Signup from './Pages/Signup';
 import PaymentPage from './Components/Payment/PaymentPage';
 import Contact from './Components/Contact/Contact';
 import AboutUs from './Components/About/AboutUs';
+import UserProfile from './Components/UserProfile/UserProfile';
 function App() {
   return (
     <div>
@@ -33,8 +33,8 @@ function App() {
         <Route path='/payment' element={<PaymentPage />}/>
         <Route path='/about' element={<AboutUs />}/>
         <Route path='/contact' element={<Contact />}/>
+        <Route path='/profile' element={<UserProfile />}/>
       </Routes>
-      <Footer/>
       </BrowserRouter>
     </div>
   );

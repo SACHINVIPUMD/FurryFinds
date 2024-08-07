@@ -6,6 +6,7 @@ import dropdown_icon from "../Assets/dropdown_icon.png";
 import { Link } from 'react-router-dom';
 import { ShopContext } from '../../Context/ShopContext';
 import { AuthContext } from '../../Context/AuthContext';
+import { FaUser } from 'react-icons/fa';
 
 const Navbar = () => {
   const [menu, setMenu] = useState("shop");
@@ -14,7 +15,6 @@ const Navbar = () => {
   const menuRef = useRef();
 
   useEffect(() => {
-    // This effect will run when 'user' changes
     console.log('User state changed:', user);
   }, [user]);
 
@@ -41,8 +41,8 @@ const Navbar = () => {
       <div className='nav-login-card'>
         {user ? (
           <>
-            <span>{user.name}</span>
             <button onClick={logout}>Logout</button>
+            <Link to='/profile'><FaUser size={24} color="#515151" /></Link>
           </>
         ) : (
           <Link to='/login'><button>Login</button></Link>
