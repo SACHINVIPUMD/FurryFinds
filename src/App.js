@@ -14,6 +14,7 @@ import PaymentPage from './Components/Payment/PaymentPage';
 import Contact from './Components/Contact/Contact';
 import AboutUs from './Components/About/AboutUs';
 import UserProfile from './Components/UserProfile/UserProfile';
+import SellerDetails from './Components/Seller/SellerDetails';
 function App() {
   return (
     <div>
@@ -34,6 +35,7 @@ function App() {
         <Route path='/about' element={<AboutUs />}/>
         <Route path='/contact' element={<Contact />}/>
         <Route path='/profile' element={<UserProfile />}/>
+        <Route path='/seller' element={<SellerDetails />}/>
       </Routes>
       </BrowserRouter>
     </div>

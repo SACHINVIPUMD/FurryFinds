@@ -10,7 +10,7 @@ import Footer from '../Components/Footer/Footer';
 const ShopCategory = (props) => {
   const { all_product } = useContext(ShopContext);
   const [searchVal, setSearchVal] = useState("");
-  const [visibleProducts, setVisibleProducts] = useState(10); // Initial number of products to display
+  const [visibleProducts, setVisibleProducts] = useState(8); // Initial number of products to display
 
   const handleSearch = () => {
     const filteredProducts = all_product.filter((item) => {

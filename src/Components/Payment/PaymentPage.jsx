@@ -1,4 +1,5 @@
 import React, { useState, useContext } from 'react';
+import axios from 'axios';
 import './PaymentPage.css';
 import creditCardIcon from '../Assets/creditcardicon.png';
 import paypalIcon from '../Assets/paypalicon.png';
@@ -8,12 +9,29 @@ import { ShopContext } from '../../Context/ShopContext';
 const PaymentPage = () => {
   const { cartItems, all_product, getTotalCartAmount } = useContext(ShopContext);
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState('creditCard');
+  const [phoneNumber, setPhoneNumber] = useState('');
+  const [address, setAddress] = useState('');
 
   const handlePaymentMethodChange = (method) => {
     setSelectedPaymentMethod(method);
   };
 
-  // Convert cartItems object to an array of items
+  const handlePayNow = async () => {
+    const userId = 2; // Replace with the actual user ID if available
+
+    try {
+      await axios.put(`http://localhost:8080/api/users/${userId}`, {
+        address: address,
+        phno: phoneNumber,
+      });
+
+      alert('Payment successful');
+    } catch (error) {
+      console.error('Error updating user info:', error);
+      alert('Payment failed. Please try again.');
+    }
+  };
+
   const cartItemsArray = Object.keys(cartItems).reduce((arr, key) => {
     const item = all_product.find(product => product.id === Number(key));
     if (item && cartItems[key] > 0) {
@@ -74,6 +92,20 @@ const PaymentPage = () => {
               <span>UPI</span>
             </div>
           </div>
+          <div className="user-details">
+            <input
+              type="text"
+              placeholder="Phone Number"
+              value={phoneNumber}
+              onChange={(e) => setPhoneNumber(e.target.value)}
+            />
+            <input
+              type="text"
+              placeholder="Address"
+              value={address}
+              onChange={(e) => setAddress(e.target.value)}
+            />
+          </div>
           {selectedPaymentMethod === 'creditCard' && (
             <div className="credit-card-form">
               <input type="text" placeholder="Card Number" />
@@ -92,7 +124,7 @@ const PaymentPage = () => {
               <p>Please complete your payment through your UPI app.</p>
             </div>
           )}
-          <button className="pay-button">Pay Now</button>
+          <button className="pay-button" onClick={handlePayNow}>Pay Now</button>
         </div>
       </div>
     </div>
