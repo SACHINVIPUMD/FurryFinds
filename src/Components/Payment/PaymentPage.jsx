@@ -3,27 +3,32 @@ import axios from 'axios';
 import './PaymentPage.css';
 import creditCardIcon from '../Assets/creditcardicon.png';
 import paypalIcon from '../Assets/paypalicon.png';
-import upiIcon from '../Assets/upi_icon.png'; 
+import upiIcon from '../Assets/upi_icon.png';
 import { ShopContext } from '../../Context/ShopContext';
+import { AuthContext } from '../../Context/AuthContext';
 
 const PaymentPage = () => {
   const { cartItems, all_product, getTotalCartAmount } = useContext(ShopContext);
+  const { user, setUser } = useContext(AuthContext);  // Access user and setUser from AuthContext
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState('creditCard');
-  const [phoneNumber, setPhoneNumber] = useState('');
-  const [address, setAddress] = useState('');
+  const [phoneNumber, setPhoneNumber] = useState(user?.phno || '');
+  const [address, setAddress] = useState(user?.address || '');
 
   const handlePaymentMethodChange = (method) => {
     setSelectedPaymentMethod(method);
   };
 
   const handlePayNow = async () => {
-    const userId = 2; // Replace with the actual user ID if available
-
     try {
-      await axios.put(`http://localhost:8080/api/users/${userId}`, {
+      const response = await axios.put(`http://localhost:8080/api/auth/update/${user.id}`, {
         address: address,
         phno: phoneNumber,
       });
+
+      // Update the user in AuthContext with the new address and phone number
+      setUser(response.data);
+
+      // Perform payment processing based on selectedPaymentMethod
 
       alert('Payment successful');
     } catch (error) {

@@ -24,4 +24,12 @@ public class AuthController {
     public ResponseEntity<User> loginUser(@RequestBody User user) {
         return userService.loginUser(user);
     }
+    @PutMapping("/update/{id}")
+    public ResponseEntity<User> updateUser(@PathVariable Long id, @RequestBody User updatedUser) {
+        Optional<User> userOptional = userService.updateUser(id, updatedUser);
+        return userOptional
+                .map(user -> new ResponseEntity<>(user, HttpStatus.OK))
+                .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    }
+
 }

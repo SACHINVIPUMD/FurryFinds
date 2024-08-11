@@ -29,5 +29,12 @@ public class UserService {
         }
         return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
     }
+    public Optional<User> updateUser(Long id, User updatedUser) {
+        return userRepository.findById(id).map(user -> {
+            user.setAddress(updatedUser.getAddress());
+            user.setPhno(updatedUser.getPhno());
+            return userRepository.save(user);
+        });
+    }
 }
 
