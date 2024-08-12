@@ -9,7 +9,7 @@ import { AuthContext } from '../../Context/AuthContext';
 
 const PaymentPage = () => {
   const { cartItems, all_product, getTotalCartAmount } = useContext(ShopContext);
-  const { user, setUser } = useContext(AuthContext);  // Access user and setUser from AuthContext
+  const { user, setUser } = useContext(AuthContext);
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState('creditCard');
   const [phoneNumber, setPhoneNumber] = useState(user?.phno || '');
   const [address, setAddress] = useState(user?.address || '');
@@ -20,33 +20,42 @@ const PaymentPage = () => {
 
   const handlePayNow = async () => {
     try {
+      // Update user address and phone number
       const response = await axios.put(`http://localhost:8080/api/auth/update/${user.id}`, {
         address: address,
         phno: phoneNumber,
       });
-
-      // Update the user in AuthContext with the new address and phone number
+  
+      // Update the user in AuthContext
       setUser(response.data);
-
-      // Perform payment processing based on selectedPaymentMethod
-
-      alert('Payment successful');
+  
+      // Prepare order items
+      const orderItems = Object.keys(cartItems).map(key => {
+        const item = all_product.find(product => product.id === Number(key));
+        if (item && cartItems[key] > 0) {
+          return {
+            productId: item.id,
+            productName: item.name,
+            description: item.description,
+            productPrice: item.new_price,
+            quantity: cartItems[key],
+          };
+        }
+        return null;
+      }).filter(item => item !== null);
+  
+      // Send each order item to backend individually
+      for (const orderItem of orderItems) {
+        await axios.post(`http://localhost:8080/api/orders/${user.id}/items`, orderItem);
+      }
+  
+      alert('Payment successful and order placed');
     } catch (error) {
-      console.error('Error updating user info:', error);
+      console.error('Error processing payment or placing order:', error);
       alert('Payment failed. Please try again.');
     }
   };
-
-  const cartItemsArray = Object.keys(cartItems).reduce((arr, key) => {
-    const item = all_product.find(product => product.id === Number(key));
-    if (item && cartItems[key] > 0) {
-      arr.push({
-        ...item,
-        quantity: cartItems[key]
-      });
-    }
-    return arr;
-  }, []);
+  
 
   return (
     <div className="payment-page">
@@ -55,17 +64,19 @@ const PaymentPage = () => {
         <div className="order-summary">
           <h2>Order Summary</h2>
           <ul>
-            {cartItemsArray.length > 0 ? (
-              cartItemsArray.map((item, index) => (
-                <li key={index}>
-                  <span>{item.name}</span>
-                  <span>{item.new_price} $</span>
-                  <span>Qty: {item.quantity}</span>
-                </li>
-              ))
-            ) : (
-              <li>No items in the cart</li>
-            )}
+            {Object.keys(cartItems).map(key => {
+              const item = all_product.find(product => product.id === Number(key));
+              if (item && cartItems[key] > 0) {
+                return (
+                  <li key={item.id}>
+                    <span>{item.name}</span>
+                    <span>{item.new_price} $</span>
+                    <span>Qty: {cartItems[key]}</span>
+                  </li>
+                );
+              }
+              return null;
+            })}
           </ul>
           <div className="total">
             <span>Total:</span>
