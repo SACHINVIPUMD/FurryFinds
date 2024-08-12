@@ -16,7 +16,9 @@ public class OrderItemService {
     public List<OrderItem> getOrderItemsByUserId(Long userId) {
         return OrderItemRepository.findByUserId(userId);
     }
-
+    public List<OrderItem> findAllOrders() {
+        return OrderItemRepository.findAll();
+    }
     public OrderItem addOrderItem(OrderItem OrderItem) {
         return OrderItemRepository.save(OrderItem);
     }

@@ -29,6 +29,10 @@
             return orderItemService.getOrderItemsByUserId(userId);
         }
 
+        @GetMapping
+        public List<OrderItem> getAllOrders() {
+            return orderItemService.findAllOrders();
+        }
         @PostMapping("/{userId}/items")
         public ResponseEntity<OrderItem> addOrderItem(@PathVariable Long userId, @RequestBody OrderItem OrderItem) {
             User user = userRepository.findById(userId)
