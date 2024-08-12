@@ -54,6 +54,16 @@
             return ResponseEntity.ok(updatedOrderItem);
         }
 
+        @PutMapping("/items/{orderItemId}/status")
+        public ResponseEntity<OrderItem> updateOrderItemStatus(@PathVariable Long orderItemId, @RequestParam String status) {
+            try {
+                OrderItem updatedOrderItem = orderItemService.updateOrderItemStatus(orderItemId, status);
+                return ResponseEntity.ok(updatedOrderItem);
+            } catch (Exception e) {
+                logger.error("Failed to update status for OrderItemId {}: {}", orderItemId, e.getMessage());
+                return ResponseEntity.status(500).build();
+            }
+        }
         @DeleteMapping("/items/{OrderItemId}")
         public ResponseEntity<Void> removeOrderItem(@PathVariable Long OrderItemId) {
             orderItemService.removeOrderItem(OrderItemId);

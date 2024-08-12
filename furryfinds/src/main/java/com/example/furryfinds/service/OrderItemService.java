@@ -29,4 +29,10 @@ public class OrderItemService {
         List<OrderItem> OrderItems = OrderItemRepository.findByUserId(userId);
         OrderItemRepository.deleteAll(OrderItems);
     }
+    public OrderItem updateOrderItemStatus(Long orderItemId, String status) {
+        OrderItem orderItem = OrderItemRepository.findById(orderItemId)
+                .orElseThrow(() -> new RuntimeException("OrderItem not found with id " + orderItemId));
+        orderItem.setStatus(status);
+        return OrderItemRepository.save(orderItem);
+    }
 }
