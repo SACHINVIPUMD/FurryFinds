@@ -14,7 +14,7 @@ public class Product {
     @Column(nullable = false)
     private String name;
 
-    @Column(nullable = false)
+    @Column
     private String description;
 
     @Enumerated(EnumType.STRING)
@@ -24,10 +24,10 @@ public class Product {
     @Column(nullable = true)
     private String image;
 
-    @Column(nullable = false)
+    @Column
     private Double newPrice;
 
-    @Column(nullable = true)
+    @Column
     private Double oldPrice;
 
     @ManyToMany(mappedBy = "products")

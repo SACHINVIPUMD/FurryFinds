@@ -16,7 +16,7 @@ public class Order {
     private User user;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
+    @Column
     private OrderStatus status;
 
     @ManyToMany
