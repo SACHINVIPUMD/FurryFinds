@@ -5,7 +5,6 @@ import { LineChart, Line, CartesianGrid, XAxis, YAxis, Tooltip, Legend, Responsi
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip as ChartTooltip, Legend as ChartLegend } from 'chart.js';
 import './AdminPage.css';
 
-// Register the necessary Chart.js components
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, ChartTooltip, ChartLegend);
 
 const AdminPage = () => {
@@ -14,13 +13,20 @@ const AdminPage = () => {
   const [editStatus, setEditStatus] = useState({});
   const [salesData, setSalesData] = useState([]);
   const [userRegistrations, setUserRegistrations] = useState([]);
+  const [products, setProducts] = useState([]);
+  const [newProduct, setNewProduct] = useState({
+    name: '',
+    description: '',
+    price: '',
+    imageUrl: '',
+    stockQuantity: ''
+  });
 
   useEffect(() => {
     // Fetch orders
     axios.get('http://localhost:8080/api/orders')
       .then(response => {
         setOrders(response.data);
-        // Process sales data for the bar chart
         const sales = response.data.reduce((acc, order) => {
           const month = new Date(order.createdAt).getMonth();
           acc[month] = (acc[month] || 0) + (order.productPrice * order.quantity);
@@ -34,7 +40,6 @@ const AdminPage = () => {
     axios.get('http://localhost:8080/api/auth/users')
       .then(response => {
         setUsers(response.data);
-        // Process user registration data for the line chart
         const registrations = response.data.reduce((acc, user) => {
           const month = new Date(user.createdAt).getMonth();
           acc[month] = (acc[month] || 0) + 1;
@@ -43,6 +48,11 @@ const AdminPage = () => {
         setUserRegistrations(registrations);
       })
       .catch(error => console.error('Error fetching users:', error));
+
+    // Fetch products
+    axios.get('http://localhost:8080/api/products')
+      .then(response => setProducts(response.data))
+      .catch(error => console.error('Error fetching products:', error));
   }, []);
 
   const handleStatusChange = (orderId, status) => {
@@ -63,7 +73,6 @@ const AdminPage = () => {
     })
     .catch(error => console.error('Error updating order status:', error));
   };
-  
 
   const deleteUser = (userId) => {
     if (window.confirm('Are you sure you want to delete this user?')) {
@@ -74,10 +83,33 @@ const AdminPage = () => {
         })
         .catch(error => {
           console.error('Error deleting user:', error);
-          // Remove the user from the UI even if the deletion fails due to a foreign key constraint
           setUsers(prevUsers => prevUsers.filter(user => user.id !== userId));
-          alert('User could not be deleted from the database, but they have been removed from the display.');
-        });
+          });
+    }
+  };
+
+  const handleProductChange = (e) => {
+    setNewProduct({ ...newProduct, [e.target.name]: e.target.value });
+  };
+
+  const addProduct = () => {
+    axios.post('http://localhost:8080/api/products', newProduct)
+      .then(response => {
+        setProducts([...products, response.data]);
+        setNewProduct({ name: '', description: '', price: '', imageUrl: '', stockQuantity: '' });
+        alert('Product added successfully!');
+      })
+      .catch(error => console.error('Error adding product:', error));
+  };
+
+  const deleteProduct = (productId) => {
+    if (window.confirm('Are you sure you want to delete this product?')) {
+      axios.delete(`http://localhost:8080/api/products/${productId}`)
+        .then(() => {
+          setProducts(prevProducts => prevProducts.filter(product => product.id !== productId));
+          alert('Product deleted successfully!');
+        })
+        .catch(error => console.error('Error deleting product:', error));
     }
   };
 
@@ -103,107 +135,200 @@ const AdminPage = () => {
 
   return (
     <div className="custom-admin-dashboard">
-      <h1 className="custom-admin-title">Admin Dashboard</h1>
-      
-      <div className="custom-admin-section custom-orders-section">
-        <h2>Manage Orders</h2>
-        <table className="custom-admin-table custom-orders-table">
-          <thead>
-            <tr>
-              <th>Order ID</th>
-              <th>Product Name</th>
-              <th>Description</th>
-              <th>Price</th>
-              <th>Quantity</th>
-              <th>Total Price</th>
-              <th>Status</th>
-              <th>User Details</th>
-              <th>Update Status</th>
-            </tr>
-          </thead>
-          <tbody>
-            {orders.map(order => (
-              <tr key={order.id}>
-                <td>{order.id}</td>
-                <td>{order.productName}</td>
-                <td>{order.description}</td>
-                <td>{order.productPrice}</td>
-                <td>{order.quantity}</td>
-                <td>{order.productPrice * order.quantity}</td>
-                <td>{order.status}</td>
-                <td>
-                  <div>
-                    <strong>Name:</strong> {order.user.name}<br />
-                    <strong>Email:</strong> {order.user.email}<br />
-                    <strong>Phone:</strong> {order.user.phno}<br />
-                    <strong>Address:</strong> {order.user.address}
-                  </div>
-                </td>
-                <td>
-                  <input
-                    type="text"
-                    value={editStatus[order.id] || order.status}
-                    onChange={(e) => handleStatusChange(order.id, e.target.value)}
-                    className="custom-status-input"
-                  />
-                  <button 
-                    className="custom-status-update-button"
-                    onClick={() => updateOrderStatus(order.id)}
-                  >
-                    Update
-                  </button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+      <div className="custom-admin-sidebar">
+        <ul>
+          <li><a href="#orders-section">Manage Orders</a></li>
+          <li><a href="#users-section">Manage Users</a></li>
+          <li><a href="#products-section">Manage Products</a></li>
+          <li><a href="#charts-section">Sales Analytics</a></li>
+        </ul>
       </div>
 
-      <div className="custom-admin-section custom-users-section">
-        <h2>Manage Users</h2>
-        <table className="custom-admin-table custom-users-table">
-          <thead>
-            <tr>
-              <th>User ID</th>
-              <th>Email</th>
-              <th>Name</th>
-              <th>Phone Number</th>
-              <th>Address</th>
-              <th>Delete</th>
-            </tr>
-          </thead>
-          <tbody>
-            {users.map(user => (
-              <tr key={user.id}>
-                <td>{user.id}</td>
-                <td>{user.email}</td>
-                <td>{user.name}</td>
-                <td>{user.phno}</td>
-                <td>{user.address}</td>
-                <td>
-                  <button 
-                    className="custom-delete-button"
-                    onClick={() => deleteUser(user.id)}
-                  >
-                    Delete
-                  </button>
-                </td>
+      <div className="custom-admin-content">
+        <h1 className="custom-admin-title">Admin Dashboard</h1>
+        
+        <div id="orders-section" className="custom-admin-section custom-orders-section">
+          <h2>Manage Orders</h2>
+          <table className="custom-admin-table custom-orders-table">
+            <thead>
+              <tr>
+                <th>Order ID</th>
+                <th>Product Name</th>
+                <th>Description</th>
+                <th>Price</th>
+                <th>Quantity</th>
+                <th>Total Price</th>
+                <th>Status</th>
+                <th>User Details</th>
+                <th>Update Status</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+            </thead>
+            <tbody>
+              {orders.map(order => (
+                <tr key={order.id}>
+                  <td>{order.id}</td>
+                  <td>{order.productName}</td>
+                  <td>{order.description}</td>
+                  <td>{order.productPrice}</td>
+                  <td>{order.quantity}</td>
+                  <td>{order.productPrice * order.quantity}</td>
+                  <td>{order.status}</td>
+                  <td>
+                    <div>
+                      <strong>Name:</strong> {order.user.name}<br />
+                      <strong>Email:</strong> {order.user.email}<br />
+                      <strong>Phone:</strong> {order.user.phno}<br />
+                      <strong>Address:</strong> {order.user.address}
+                    </div>
+                  </td>
+                  <td>
+                    <input
+                      type="text"
+                      value={editStatus[order.id] || order.status}
+                      onChange={(e) => handleStatusChange(order.id, e.target.value)}
+                      className="custom-status-input"
+                    />
+                    <button 
+                      className="custom-status-update-button"
+                      onClick={() => updateOrderStatus(order.id)}
+                    >
+                      Update
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
 
-      <div className="custom-admin-section custom-charts-section">
-        <h2>Sales Analytics</h2>
-        <div className="custom-charts-container">
-          <div className="custom-chart-item">
-            <h3>Monthly Sales</h3>
-            <Bar data={barChartData} />
+        <div id="users-section" className="custom-admin-section custom-users-section">
+          <h2>Manage Users</h2>
+          <table className="custom-admin-table custom-users-table">
+            <thead>
+              <tr>
+                <th>User ID</th>
+                <th>Email</th>
+                <th>Name</th>
+                <th>Phone Number</th>
+                <th>Address</th>
+                <th>Delete</th>
+              </tr>
+            </thead>
+            <tbody>
+              {users.map(user => (
+                <tr key={user.id}>
+                  <td>{user.id}</td>
+                  <td>{user.email}</td>
+                  <td>{user.name}</td>
+                  <td>{user.phno}</td>
+                  <td>{user.address}</td>
+                  <td>
+                    <button 
+                      className="custom-delete-button"
+                      onClick={() => deleteUser(user.id)}
+                    >
+                      Delete
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+
+        <div id="products-section" className="custom-admin-section custom-products-section">
+          <h2>Manage Products</h2>
+          <div className="custom-product-form">
+            <input
+              type="text"
+              name="name"
+              placeholder="Product Name"
+              value={newProduct.name}
+              onChange={handleProductChange}
+            />
+            <input
+              type="text"
+              name="description"
+              placeholder="Description"
+              value={newProduct.description}
+              onChange={handleProductChange}
+            />
+            <input
+              type="number"
+              name="price"
+              placeholder="Price"
+              value={newProduct.price}
+              onChange={handleProductChange}
+            />
+            <input
+              type="text"
+              name="imageUrl"
+              placeholder="Image URL"
+              value={newProduct.imageUrl}
+              onChange={handleProductChange}
+            />
+            <input
+              type="number"
+              name="stockQuantity"
+              placeholder="Stock Quantity"
+              value={newProduct.stockQuantity}
+              onChange={handleProductChange}
+            />
+            <button onClick={addProduct} className="custom-add-product-button">Add Product</button>
           </div>
-          <div className="custom-chart-item">
+          <table className="custom-admin-table custom-products-table">
+            <thead>
+              <tr>
+                <th>Product ID</th>
+                <th>Name</th>
+                <th>Description</th>
+                <th>Price</th>
+                <th>Stock Quantity</th>
+                <th>Delete</th>
+              </tr>
+            </thead>
+            <tbody>
+              {products.map(product => (
+                <tr key={product.id}>
+                  <td>{product.id}</td>
+                  <td>{product.name}</td>
+                  <td>{product.description}</td>
+                  <td>{product.price}</td>
+                  <td>{product.stockQuantity}</td>
+                  <td>
+                    <button 
+                      className="custom-delete-button"
+                      onClick={() => deleteProduct(product.id)}
+                    >
+                      Delete
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+
+        <div id="charts-section" className="custom-admin-section custom-charts-section">
+          <h2>Sales Analytics</h2>
+          <div className="custom-chart-container">
+            {/* <h3>Monthly Sales</h3> */}
+            <Bar
+              data={barChartData}
+              options={{
+                maintainAspectRatio: false,
+                scales: {
+                  y: {
+                    beginAtZero: true
+                  }
+                }
+              }}
+              height={400}
+            />
+          </div>
+          <div className="custom-chart-container">
             <h3>User Registrations</h3>
-            <ResponsiveContainer width="100%" height={300}>
+            <ResponsiveContainer width="100%" height={400}>
               <LineChart data={lineChartData}>
                 <Line type="monotone" dataKey="count" stroke="#8884d8" />
                 <CartesianGrid stroke="#ccc" />

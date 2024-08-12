@@ -11,7 +11,12 @@ const Login = () => {
 
   const handleLogin = async () => {
     await login(email, password);
-    navigate('/');
+
+    if (email==='admin@gmail.com') {
+      navigate('/admin');
+    } else {
+      navigate('/');
+    }
   };
 
   return (
@@ -39,6 +44,6 @@ const Login = () => {
       </div>
     </div>
   );
-}
+};
 
 export default Login;
