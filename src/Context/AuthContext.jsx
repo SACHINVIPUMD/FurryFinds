@@ -31,16 +31,16 @@ export const AuthProvider = ({ children }) => {
 
   const register = async (name, email, password) => {
     try {
-      const response = await axios.post('http://localhost:8080/api/auth/register', {
+      await axios.post('http://localhost:8080/api/auth/register', {
         name,
         email,
         password,
       });
-      const data = response.data;
-      if (data) {
-        setUser(data);
-        localStorage.setItem('user', JSON.stringify(data));
-      }
+      // const data = response.data;
+      // if (data) {
+      //   setUser(data);
+      //   localStorage.setItem('user', JSON.stringify(data));
+      // }
     } catch (error) {
       console.error('Registration failed', error);
     }

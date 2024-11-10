@@ -83,8 +83,7 @@ const AdminPage = () => {
         })
         .catch(error => {
           console.error('Error deleting user:', error);
-          setUsers(prevUsers => prevUsers.filter(user => user.id !== userId));
-          });
+        });
     }
   };
 
@@ -134,8 +133,8 @@ const AdminPage = () => {
   }));
 
   return (
-    <div className="custom-admin-dashboard">
-      <div className="custom-admin-sidebar">
+    <div className="admin-dashboard">
+      <div className="admin-sidebar">
         <ul>
           <li><a href="#orders-section">Manage Orders</a></li>
           <li><a href="#users-section">Manage Users</a></li>
@@ -144,12 +143,12 @@ const AdminPage = () => {
         </ul>
       </div>
 
-      <div className="custom-admin-content">
-        <h1 className="custom-admin-title">Admin Dashboard</h1>
+      <div className="admin-content">
+        <h1 className="admin-title">Admin Dashboard</h1>
         
-        <div id="orders-section" className="custom-admin-section custom-orders-section">
+        <div id="orders-section" className="admin-section orders-section">
           <h2>Manage Orders</h2>
-          <table className="custom-admin-table custom-orders-table">
+          <table className="admin-table orders-table">
             <thead>
               <tr>
                 <th>Order ID</th>
@@ -186,10 +185,10 @@ const AdminPage = () => {
                       type="text"
                       value={editStatus[order.id] || order.status}
                       onChange={(e) => handleStatusChange(order.id, e.target.value)}
-                      className="custom-status-input"
+                      className="status-input"
                     />
                     <button 
-                      className="custom-status-update-button"
+                      className="status-update-button"
                       onClick={() => updateOrderStatus(order.id)}
                     >
                       Update
@@ -201,9 +200,9 @@ const AdminPage = () => {
           </table>
         </div>
 
-        <div id="users-section" className="custom-admin-section custom-users-section">
+        <div id="users-section" className="admin-section users-section">
           <h2>Manage Users</h2>
-          <table className="custom-admin-table custom-users-table">
+          <table className="admin-table users-table">
             <thead>
               <tr>
                 <th>User ID</th>
@@ -224,7 +223,7 @@ const AdminPage = () => {
                   <td>{user.address}</td>
                   <td>
                     <button 
-                      className="custom-delete-button"
+                      className="delete-button"
                       onClick={() => deleteUser(user.id)}
                     >
                       Delete
@@ -236,9 +235,9 @@ const AdminPage = () => {
           </table>
         </div>
 
-        <div id="products-section" className="custom-admin-section custom-products-section">
+        <div id="products-section" className="admin-section products-section">
           <h2>Manage Products</h2>
-          <div className="custom-product-form">
+          <div className="product-form">
             <input
               type="text"
               name="name"
@@ -249,14 +248,14 @@ const AdminPage = () => {
             <input
               type="text"
               name="description"
-              placeholder="Description"
+              placeholder="Product Description"
               value={newProduct.description}
               onChange={handleProductChange}
             />
             <input
               type="number"
               name="price"
-              placeholder="Price"
+              placeholder="Product Price"
               value={newProduct.price}
               onChange={handleProductChange}
             />
@@ -274,30 +273,32 @@ const AdminPage = () => {
               value={newProduct.stockQuantity}
               onChange={handleProductChange}
             />
-            <button onClick={addProduct} className="custom-add-product-button">Add Product</button>
+            <button onClick={addProduct}>Add Product</button>
           </div>
-          <table className="custom-admin-table custom-products-table">
+          <table className="admin-table products-table">
             <thead>
               <tr>
                 <th>Product ID</th>
                 <th>Name</th>
                 <th>Description</th>
                 <th>Price</th>
+                <th>image</th>
                 <th>Stock Quantity</th>
                 <th>Delete</th>
               </tr>
             </thead>
-            <tbody>
+            <tbody> 
               {products.map(product => (
                 <tr key={product.id}>
                   <td>{product.id}</td>
                   <td>{product.name}</td>
                   <td>{product.description}</td>
                   <td>{product.price}</td>
+                  <td>{product.imageUrl}</td>
                   <td>{product.stockQuantity}</td>
                   <td>
                     <button 
-                      className="custom-delete-button"
+                      className="delete-button"
                       onClick={() => deleteProduct(product.id)}
                     >
                       Delete
@@ -309,33 +310,33 @@ const AdminPage = () => {
           </table>
         </div>
 
-        <div id="charts-section" className="custom-admin-section custom-charts-section">
+        <div id="charts-section" className="admin-section charts-section">
           <h2>Sales Analytics</h2>
           <div className="custom-chart-container">
-            {/* <h3>Monthly Sales</h3> */}
-            <Bar
-              data={barChartData}
-              options={{
-                maintainAspectRatio: false,
-                scales: {
-                  y: {
-                    beginAtZero: true
+            <ResponsiveContainer width="100%" height={400}>
+              <Bar
+                data={barChartData}
+                options={{
+                  maintainAspectRatio: false,
+                  scales: {
+                    y: {
+                      beginAtZero: true
+                    }
                   }
-                }
-              }}
-              height={400}
-            />
+                }}
+              />
+            </ResponsiveContainer>
           </div>
+
           <div className="custom-chart-container">
-            <h3>User Registrations</h3>
             <ResponsiveContainer width="100%" height={400}>
               <LineChart data={lineChartData}>
-                <Line type="monotone" dataKey="count" stroke="#8884d8" />
                 <CartesianGrid stroke="#ccc" />
                 <XAxis dataKey="month" />
                 <YAxis />
                 <Tooltip />
                 <Legend />
+                <Line type="monotone" dataKey="count" stroke="#82ca9d" />
               </LineChart>
             </ResponsiveContainer>
           </div>
